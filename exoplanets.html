@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#020308" />
+  <title>Exoplanets — CosmosVerse</title>
+  <meta name="description" content="Twenty-four of the strangest worlds ever discovered — lava planets, diamond cores, oceans under glass-rain skies, and planets that might just be habitable." />
+  <meta property="og:title" content="Exoplanets — CosmosVerse" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%8C%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .filter-bar {
+      max-width: 1280px;
+      margin: 0 auto 36px;
+      padding: 0 24px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
+    .filter-btn {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      padding: 7px 14px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover { color: var(--accent); border-color: var(--border-strong); }
+    .filter-btn.active {
+      color: var(--bg);
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .count-badge {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+    .count-badge span { color: var(--accent); font-family: var(--serif); font-style: italic; font-size: 13px; }
+
+    .exo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 22px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .exo-card {
+      background: linear-gradient(180deg, rgba(15, 25, 50, 0.4), rgba(8, 14, 30, 0.4));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 22px 24px;
+      position: relative;
+      transition: all 0.3s;
+      overflow: hidden;
+    }
+    .exo-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-4px);
+    }
+    .exo-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .exo-card:hover::before { opacity: 0.6; }
+
+    .exo-planet {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      margin: 6px auto 22px;
+      position: relative;
+      animation: rotate 30s linear infinite;
+    }
+    @keyframes rotate {
+      to { transform: rotate(360deg); }
+    }
+    .exo-planet::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 50%;
+      box-shadow: inset -25px -15px 30px rgba(0,0,0,0.6);
+      pointer-events: none;
+    }
+
+    /* Planet types */
+    .p-rocky { background: radial-gradient(circle at 30% 30%, #D8B898, #9B6E48 40%, #4A2814 75%, #1A0E08); }
+    .p-superrock { background: radial-gradient(circle at 30% 30%, #E8A878, #B8603C 40%, #5A1810 75%, #1A0808); }
+    .p-lava { background: radial-gradient(circle at 30% 30%, #FFEE80, #FF7020 30%, #B02010 60%, #401005); box-shadow: 0 0 24px rgba(255, 100, 30, 0.35); }
+    .p-ocean { background: radial-gradient(circle at 30% 30%, #88E8FF, #2880D8 40%, #1A2E5C 75%, #050818); }
+    .p-ice { background: radial-gradient(circle at 30% 30%, #E0F0FF, #88B0D8 40%, #3A5680 75%, #0E1820); }
+    .p-gasgiant { background:
+        repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0 4px, transparent 4px 12px),
+        radial-gradient(circle at 30% 30%, #FFD4A0, #E89048 35%, #8C4818 70%, #3A1A08); }
+    .p-bluejupiter { background:
+        repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0 4px, transparent 4px 12px),
+        radial-gradient(circle at 30% 30%, #C0D8FF, #5078E0 35%, #1A2A78 70%, #060818); }
+    .p-darkjupiter { background:
+        repeating-linear-gradient(0deg, rgba(0,0,0,0.2) 0 4px, transparent 4px 14px),
+        radial-gradient(circle at 30% 30%, #604040, #2A1A1A 40%, #0E0608 80%); }
+    .p-ultrahot { background: radial-gradient(circle at 30% 30%, #FFFFEE, #FFAA40 25%, #C04020 55%, #500808 85%); box-shadow: 0 0 30px rgba(255, 130, 40, 0.5); }
+    .p-pink { background: radial-gradient(circle at 30% 30%, #FFC8E8, #E07AB0 40%, #8C2070 75%, #2E0828); box-shadow: 0 0 18px rgba(220, 100, 170, 0.3); }
+    .p-mininep { background: radial-gradient(circle at 30% 30%, #B8E8E0, #5A98A8 40%, #1E4858 75%, #0A1A22); }
+    .p-pulsar { background: radial-gradient(circle at 30% 30%, #888888, #444444 40%, #1A1A1A 75%, #050505); box-shadow: 0 0 16px rgba(180, 180, 200, 0.2); }
+    .p-diamond { background: radial-gradient(circle at 30% 30%, #FFFFEE, #C0C0E0 40%, #404060 75%, #101020); box-shadow: 0 0 24px rgba(200, 200, 255, 0.4); }
+    .p-darkest { background: radial-gradient(circle at 30% 30%, #2A2A30, #0E0E14 40%, #050508 75%, #020205); }
+    .p-tatooine { background:
+        repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0 4px, transparent 4px 11px),
+        radial-gradient(circle at 30% 30%, #FFE4B0, #D89858 35%, #804818 70%, #2A1408); box-shadow: 0 0 12px rgba(255, 180, 80, 0.2); }
+
+    .exo-name {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 22px;
+      color: var(--accent);
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .exo-meta {
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .exo-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .exo-stat .lbl {
+      font-size: 8.5px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 3px;
+    }
+    .exo-stat .val {
+      font-size: 11px;
+      color: #c0d8f0;
+    }
+    .exo-fact {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.75;
+      font-style: italic;
+    }
+    .hab-tag {
+      position: absolute;
+      top: 16px; right: 16px;
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #86efac;
+      background: rgba(134, 239, 172, 0.08);
+      border: 1px solid rgba(134, 239, 172, 0.3);
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    .exo-empty {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--text-faint);
+      font-style: italic;
+      font-family: var(--serif);
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body class="chapter-exo">
+
+<nav class="cv-nav">
+  <a href="/" class="cv-logo">Cosmos<span>Verse</span></a>
+  <button class="cv-menu-toggle" aria-label="Menu" onclick="document.body.classList.toggle('menu-open')">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="cv-nav-links">
+    <a href="/">Home</a>
+    <a href="/solar-system">Solar</a>
+    <a href="/black-holes">Black Holes</a>
+    <a href="/galaxies">Galaxies</a>
+    <a href="/timeline">Timeline</a>
+    <a href="/star-life">Stars</a>
+    <a href="/exoplanets" class="active">Worlds</a>
+  </div>
+</nav>
+
+<section class="chapter-page" style="padding-bottom:40px;">
+  <div class="chapter-header">
+    <div class="section-label">Chapter Six</div>
+    <h2 class="section-title">Other worlds.<br/>Twenty-four <span class="accent">strange worlds</span> beyond the Sun.</h2>
+    <p class="section-desc">Of the 5,500+ exoplanets confirmed so far, here are some of the most extraordinary. Lava worlds, diamond worlds, oceans under glass-rain skies — and a few that might be Earth's twin.</p>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-group" id="filter-group">
+      <button class="filter-btn active" data-f="all">All</button>
+      <button class="filter-btn" data-f="rocky">Rocky</button>
+      <button class="filter-btn" data-f="gasgiant">Gas Giant</button>
+      <button class="filter-btn" data-f="extreme">Extreme</button>
+      <button class="filter-btn" data-f="habitable">Habitable Zone</button>
+      <button class="filter-btn" data-f="ocean">Ocean / Ice</button>
+    </div>
+    <div class="count-badge"><span id="count">24</span> worlds shown</div>
+  </div>
+
+  <div class="exo-grid" id="exo-grid"></div>
+  <div class="exo-empty" id="exo-empty" style="display:none;">No worlds match this filter — yet.</div>
+</section>
+
+<nav class="chapter-nav">
+  <a href="/star-life" class="chapter-nav-link prev">
+    <span class="small">↩ &nbsp; Chapter Five</span>
+    <span class="big">Life of a Star</span>
+  </a>
+  <a href="/" class="chapter-nav-link next">
+    <span class="small">Return &nbsp; ↪</span>
+    <span class="big">The Cosmic Hub</span>
+  </a>
+</nav>
+
+<footer class="cv-footer">
+  <div class="credit">Built with curiosity by <span>Yuvaan Technologies</span></div>
+  <div>CosmosVerse &nbsp;·&nbsp; v 1.0</div>
+</footer>
+
+<script>
+var EXOPLANETS = [
+  { name: 'Proxima Centauri b', cls: 'p-rocky', type: 'Rocky · Closest Exoplanet', cat: ['rocky','habitable'],
+    constellation: 'Centaurus', distance: '4.24 ly', year: '2016', habitable: true,
+    fact: 'The closest known exoplanet to Earth. Orbits the nearest star to our Sun, within its habitable zone — though its red dwarf parent unleashes violent flares.' },
+  { name: 'Kepler-452b', cls: 'p-rocky', type: 'Super-Earth · Earth\'s Cousin', cat: ['rocky','habitable'],
+    constellation: 'Cygnus', distance: '1,402 ly', year: '2015', habitable: true,
+    fact: 'A super-Earth in the habitable zone of a Sun-like star. Called "Earth\'s cousin" — slightly larger, slightly older, and possibly very much like home.' },
+  { name: 'TRAPPIST-1e', cls: 'p-rocky', type: 'Rocky · Habitable Zone', cat: ['rocky','habitable'],
+    constellation: 'Aquarius', distance: '40 ly', year: '2017', habitable: true,
+    fact: 'One of seven Earth-sized worlds around a single tiny star. Three of them, including this one, are in the habitable zone. The system\'s outermost worlds may have liquid water.' },
+  { name: 'TRAPPIST-1g', cls: 'p-ocean', type: 'Rocky · Habitable Zone', cat: ['rocky','habitable','ocean'],
+    constellation: 'Aquarius', distance: '40 ly', year: '2017', habitable: true,
+    fact: 'The largest of the TRAPPIST-1 worlds. May host significant liquid water — possibly more ocean than Earth\'s entire surface.' },
+  { name: 'HD 189733 b', cls: 'p-bluejupiter', type: 'Hot Jupiter · Blue Marble', cat: ['gasgiant','extreme'],
+    constellation: 'Vulpecula', distance: '64 ly', year: '2005',
+    fact: 'A deep cobalt-blue gas giant where it rains molten glass — sideways, at 8,700 km/h. The blue colour comes not from oceans but from silicate particles.' },
+  { name: '55 Cancri e', cls: 'p-diamond', type: 'Super-Earth · Diamond World', cat: ['rocky','extreme'],
+    constellation: 'Cancer', distance: '41 ly', year: '2004',
+    fact: 'A super-Earth twice our size, possibly with a carbon-rich interior that has crystallised into diamond. Its surface temperature reaches 2,400°C.' },
+  { name: 'Kepler-186f', cls: 'p-rocky', type: 'Rocky · First Earth-Size in HZ', cat: ['rocky','habitable'],
+    constellation: 'Cygnus', distance: '580 ly', year: '2014', habitable: true,
+    fact: 'The first Earth-sized planet found in the habitable zone of its star. A historic discovery: proof that worlds like ours exist around other suns.' },
+  { name: 'WASP-12b', cls: 'p-ultrahot', type: 'Ultra-Hot Jupiter', cat: ['gasgiant','extreme'],
+    constellation: 'Auriga', distance: '1,410 ly', year: '2008',
+    fact: 'Being eaten by its star. Its atmosphere is being stripped away as it spirals inward — it will be devoured within 10 million years.' },
+  { name: 'KELT-9b', cls: 'p-ultrahot', type: 'Hottest Known Exoplanet', cat: ['gasgiant','extreme'],
+    constellation: 'Cygnus', distance: '670 ly', year: '2016',
+    fact: 'Day-side temperature: 4,300°C — hotter than most stars. Its atmosphere is so hot that even its molecules are torn apart into atoms.' },
+  { name: 'K2-18b', cls: 'p-mininep', type: 'Mini-Neptune · Possibly Habitable', cat: ['ocean','habitable'],
+    constellation: 'Leo', distance: '124 ly', year: '2015', habitable: true,
+    fact: 'JWST detected methane and CO₂ in its atmosphere — and possibly dimethyl sulphide, a molecule produced on Earth only by life. The first true tantalising hint.' },
+  { name: 'HD 209458 b', cls: 'p-gasgiant', type: 'Hot Jupiter · First Transit', cat: ['gasgiant'],
+    constellation: 'Pegasus', distance: '159 ly', year: '1999',
+    fact: 'Nicknamed Osiris. The first exoplanet observed transiting its star — the moment exoplanet science went from theory to spectroscopy.' },
+  { name: 'PSR B1257+12 c', cls: 'p-pulsar', type: 'Pulsar Planet · First Confirmed', cat: ['rocky','extreme'],
+    constellation: 'Virgo', distance: '2,300 ly', year: '1992',
+    fact: 'The first confirmed exoplanet ever found. It orbits a pulsar — the rapidly spinning corpse of a dead star. A world bathed in deadly radiation.' },
+  { name: 'GJ 1214 b', cls: 'p-ocean', type: 'Water World · Mini-Neptune', cat: ['ocean'],
+    constellation: 'Ophiuchus', distance: '47 ly', year: '2009',
+    fact: 'May be a true water world — but with such pressure and heat that it features exotic ice phases that exist only deep underwater on no other known world.' },
+  { name: '51 Pegasi b', cls: 'p-gasgiant', type: 'Hot Jupiter · The First', cat: ['gasgiant'],
+    constellation: 'Pegasus', distance: '50 ly', year: '1995',
+    fact: 'The first exoplanet ever discovered around a Sun-like star. Its existence — a Jupiter in a four-day orbit — broke our textbooks. The discovery won the Nobel Prize.' },
+  { name: 'HR 8799 e', cls: 'p-gasgiant', type: 'Gas Giant · Directly Imaged', cat: ['gasgiant'],
+    constellation: 'Pegasus', distance: '129 ly', year: '2010',
+    fact: 'One of four planets directly photographed orbiting their star. We can actually see them — moving, year after year. A solar system caught in a still life.' },
+  { name: 'LHS 1140 b', cls: 'p-superrock', type: 'Super-Earth · Habitable Zone', cat: ['rocky','habitable'],
+    constellation: 'Cetus', distance: '41 ly', year: '2017', habitable: true,
+    fact: 'A dense rocky super-Earth orbiting a calm red dwarf. Among the most promising targets for future atmospheric biosignature searches.' },
+  { name: 'TrES-2b', cls: 'p-darkest', type: 'Darkest Known Exoplanet', cat: ['gasgiant','extreme'],
+    constellation: 'Draco', distance: '750 ly', year: '2006',
+    fact: 'Reflects less than 1% of its starlight — darker than coal. We see it only because it glows faintly red-hot from internal heat.' },
+  { name: 'Kepler-22b', cls: 'p-ocean', type: 'Super-Earth · First HZ Confirmation', cat: ['ocean','habitable'],
+    constellation: 'Cygnus', distance: '600 ly', year: '2011', habitable: true,
+    fact: 'The first planet confirmed in the habitable zone of a Sun-like star. Its true nature — rocky or water world — is still debated.' },
+  { name: 'WASP-39 b', cls: 'p-gasgiant', type: 'Hot Saturn · CO₂ Detected', cat: ['gasgiant'],
+    constellation: 'Virgo', distance: '700 ly', year: '2011',
+    fact: 'The first planet beyond our solar system where carbon dioxide was unambiguously detected — by JWST in 2022. Atmospheric chemistry, light-years away.' },
+  { name: 'WASP-76b', cls: 'p-ultrahot', type: 'Ultra-Hot Jupiter · Iron Rain', cat: ['gasgiant','extreme'],
+    constellation: 'Pisces', distance: '640 ly', year: '2013',
+    fact: 'On its day side, iron is vapourised in the atmosphere. On the night side, it cools and rains down as molten metal. A world of literal iron rain.' },
+  { name: 'TOI-700 d', cls: 'p-rocky', type: 'Rocky · Earth-Size in HZ', cat: ['rocky','habitable'],
+    constellation: 'Dorado', distance: '101 ly', year: '2020', habitable: true,
+    fact: 'TESS\'s first Earth-sized world in a habitable zone. A quiet red dwarf system that doesn\'t bombard its planets with flares — a gentler, kinder neighbourhood.' },
+  { name: 'Gliese 581g', cls: 'p-rocky', type: 'Super-Earth · Disputed', cat: ['rocky','habitable'],
+    constellation: 'Libra', distance: '20 ly', year: '2010',
+    fact: 'A controversial candidate. Some studies confirm it; others dispute its existence. If real, it sits squarely in the habitable zone of a nearby red dwarf.' },
+  { name: 'GJ 504 b', cls: 'p-pink', type: 'Gas Giant · The Pink Planet', cat: ['gasgiant'],
+    constellation: 'Virgo', distance: '57 ly', year: '2013',
+    fact: 'Genuinely pink — a young gas giant still glowing from formation, its colour due to a curious lack of cloud cover. It looks like a cherry blossom in space.' },
+  { name: 'Kepler-16b', cls: 'p-tatooine', type: 'Gas Giant · Tatooine World', cat: ['gasgiant'],
+    constellation: 'Cygnus', distance: '245 ly', year: '2011',
+    fact: 'A planet with two suns. It orbits both stars of a binary system — a real-life Tatooine where, if you stood on its surface, you\'d watch twin suns set together.' }
+];
+
+var grid = document.getElementById('exo-grid');
+var emptyMsg = document.getElementById('exo-empty');
+var countEl = document.getElementById('count');
+
+function renderCards(filter) {
+  grid.innerHTML = '';
+  var shown = 0;
+  EXOPLANETS.forEach(function(p) {
+    if (filter !== 'all' && p.cat.indexOf(filter) === -1) return;
+    shown++;
+    var card = document.createElement('div');
+    card.className = 'exo-card';
+    var habTag = p.habitable ? '<span class="hab-tag">● Habitable</span>' : '';
+    card.innerHTML =
+      habTag +
+      '<div class="exo-planet ' + p.cls + '"></div>' +
+      '<div class="exo-name">' + p.name + '</div>' +
+      '<div class="exo-meta">' + p.type + '</div>' +
+      '<div class="exo-stats">' +
+        '<div class="exo-stat"><div class="lbl">Distance</div><div class="val">' + p.distance + '</div></div>' +
+        '<div class="exo-stat"><div class="lbl">Discovered</div><div class="val">' + p.year + '</div></div>' +
+        '<div class="exo-stat"><div class="lbl">Constellation</div><div class="val">' + p.constellation + '</div></div>' +
+        '<div class="exo-stat"><div class="lbl">Type</div><div class="val">' + (p.cat[0].charAt(0).toUpperCase() + p.cat[0].slice(1)) + '</div></div>' +
+      '</div>' +
+      '<div class="exo-fact">' + p.fact + '</div>';
+    grid.appendChild(card);
+  });
+  countEl.textContent = shown;
+  emptyMsg.style.display = shown === 0 ? 'block' : 'none';
+}
+
+document.getElementById('filter-group').addEventListener('click', function(e) {
+  if (e.target.classList.contains('filter-btn')) {
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    e.target.classList.add('active');
+    renderCards(e.target.dataset.f);
+  }
+});
+
+renderCards('all');
+</script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#020308" />
+  <title>CosmosVerse — An Interactive Journey Through the Universe</title>
+  <meta name="description" content="Explore the universe in real-time 3D. Solar system, black holes, galaxies, the universe timeline, the life of stars, and 5,500+ exoplanets — all in one immersive journey." />
+  <meta property="og:title" content="CosmosVerse — An Interactive Journey Through the Universe" />
+  <meta property="og:description" content="Explore the cosmos in real-time 3D. Six chapters. One universe." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%8C%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .chapters-section { padding: 60px 24px 100px; max-width: 1280px; margin: 0 auto; }
+    .chapters-section .section-label { justify-content: center; }
+    .chapters-section .chapters-intro { text-align: center; margin-bottom: 56px; }
+    .chapters-section .section-title { margin: 0 auto; }
+    .chapters-section .section-desc { margin: 22px auto 0; }
+    .cv-card.live::after {
+      content: '';
+      position: absolute;
+      top: 24px; right: 24px;
+      width: 6px; height: 6px;
+      background: #86efac;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #86efac;
+      animation: pulse 2s infinite;
+    }
+    .stats-band {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      padding: 50px 24px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      text-align: center;
+    }
+    .stat-block .num {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 36px;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .stat-block .lbl {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body class="chapter-solar">
+
+<nav class="cv-nav">
+  <a href="/" class="cv-logo">Cosmos<span>Verse</span></a>
+  <button class="cv-menu-toggle" aria-label="Menu" onclick="document.body.classList.toggle('menu-open')">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="cv-nav-links">
+    <a href="/" class="active">Home</a>
+    <a href="/solar-system">Solar</a>
+    <a href="/black-holes">Black Holes</a>
+    <a href="/galaxies">Galaxies</a>
+    <a href="/timeline">Timeline</a>
+    <a href="/star-life">Stars</a>
+    <a href="/exoplanets">Worlds</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">An interactive journey through the cosmos</div>
+  <h1>
+    Every star.<br/>
+    Every planet.<br/>
+    Every <span class="accent">mystery.</span>
+  </h1>
+  <p class="hero-sub">
+    CosmosVerse is a real-time 3D exploration of the universe — from the eight worlds of our solar
+    system to the singularities of black holes, the spirals of galaxies, the birth and death of stars,
+    and the alien worlds beyond.
+  </p>
+  <a href="#chapters" class="hero-scroll">↓ &nbsp; Choose your chapter</a>
+</section>
+
+<div class="stats-band">
+  <div class="stat-block">
+    <div class="num">6</div>
+    <div class="lbl">Chapters</div>
+  </div>
+  <div class="stat-block">
+    <div class="num">13.8B</div>
+    <div class="lbl">Years of history</div>
+  </div>
+  <div class="stat-block">
+    <div class="num">5,500+</div>
+    <div class="lbl">Exoplanets catalogued</div>
+  </div>
+  <div class="stat-block">
+    <div class="num">∞</div>
+    <div class="lbl">Wonder</div>
+  </div>
+</div>
+
+<section class="chapters-section" id="chapters">
+  <div class="chapters-intro">
+    <div class="section-label">The Six Chapters</div>
+    <h2 class="section-title">A universe, told in six chapters.</h2>
+    <p class="section-desc">Each chapter opens a different lens onto the cosmos. Start anywhere. End nowhere.</p>
+  </div>
+
+  <div class="cards-grid">
+    <a href="/solar-system" class="cv-card live featured">
+      <div class="card-num">01 — Our Neighbourhood</div>
+      <div class="card-title">The Solar System</div>
+      <div class="card-desc">Eight worlds, one star, and the gravity that holds them in dance. Drift between Mercury and Neptune in real-time 3D.</div>
+      <span class="card-tag live">● Live</span>
+    </a>
+
+    <a href="/black-holes" class="cv-card live">
+      <div class="card-num">02 — Into the Abyss</div>
+      <div class="card-title">Black Holes</div>
+      <div class="card-desc">Peer past the event horizon. Witness an accretion disk in motion and the photon ring of a supermassive monster.</div>
+      <span class="card-tag live">● Live</span>
+    </a>
+
+    <a href="/galaxies" class="cv-card live">
+      <div class="card-num">03 — Island Universes</div>
+      <div class="card-title">The Milky Way</div>
+      <div class="card-desc">Voyage above our home galaxy. 200 billion stars arranged in spiral arms, sculpted by dark matter and time.</div>
+      <span class="card-tag live">● Live</span>
+    </a>
+
+    <a href="/timeline" class="cv-card live">
+      <div class="card-num">04 — Time Itself</div>
+      <div class="card-title">Universe Timeline</div>
+      <div class="card-desc">13.8 billion years compressed into one scrollable journey — from the Big Bang to the heat death yet to come.</div>
+      <span class="card-tag live">● Live</span>
+    </a>
+
+    <a href="/star-life" class="cv-card live">
+      <div class="card-num">05 — Stellar Lives</div>
+      <div class="card-title">Life of a Star</div>
+      <div class="card-desc">Nebula. Protostar. Main sequence. Red giant. Supernova. Watch a star live and die in seven acts.</div>
+      <span class="card-tag live">● Live</span>
+    </a>
+
+    <a href="/exoplanets" class="cv-card live">
+      <div class="card-num">06 — Other Worlds</div>
+      <div class="card-title">Exoplanets</div>
+      <div class="card-desc">Twenty-four of the strangest worlds ever discovered — lava planets, diamond cores, oceans under glass-rain skies.</div>
+      <span class="card-tag live">● Live</span>
+    </a>
+  </div>
+</section>
+
+<footer class="cv-footer">
+  <div class="credit">Built with curiosity by <span>Yuvaan Technologies</span></div>
+  <div>CosmosVerse &nbsp;·&nbsp; v 1.0 &nbsp;·&nbsp; The universe, in three dimensions</div>
+</footer>
+
+</body>
+</html>

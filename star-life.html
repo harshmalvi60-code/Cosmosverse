@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#020308" />
+  <title>Life of a Star — CosmosVerse</title>
+  <meta name="description" content="Nebula. Protostar. Main sequence. Red giant. Supernova. Watch a star live and die in seven acts." />
+  <meta property="og:title" content="Life of a Star — CosmosVerse" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%8C%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .stage-controls {
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      z-index: 10;
+      background: rgba(1, 4, 16, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 6px 8px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      max-width: calc(100% - 32px);
+      overflow-x: auto;
+    }
+    .stage-btn {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      padding: 6px 12px;
+      border-radius: 20px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .stage-btn:hover { color: var(--accent); }
+    .stage-btn.active { color: var(--bg); background: var(--accent); }
+    .play-btn {
+      font-size: 11px;
+      padding: 6px 12px;
+      color: var(--accent);
+      border-left: 1px solid var(--border);
+      margin-left: 4px;
+    }
+    .stage-readout {
+      position: absolute;
+      left: 28px;
+      bottom: 24px;
+      z-index: 10;
+      max-width: 280px;
+    }
+    .stage-readout .age {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 4px;
+    }
+    .stage-readout .name {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 22px;
+      color: var(--accent);
+      margin-bottom: 8px;
+      line-height: 1.1;
+    }
+    .stage-readout .desc {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+    @media (max-width: 720px) {
+      .stage-readout { left: 16px; right: 16px; max-width: none; bottom: 80px; background: rgba(1,4,16,0.7); padding: 12px; border-radius: 8px; }
+      .stage-controls { font-size: 8px; }
+    }
+  </style>
+</head>
+<body class="chapter-stars">
+
+<nav class="cv-nav">
+  <a href="/" class="cv-logo">Cosmos<span>Verse</span></a>
+  <button class="cv-menu-toggle" aria-label="Menu" onclick="document.body.classList.toggle('menu-open')">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="cv-nav-links">
+    <a href="/">Home</a>
+    <a href="/solar-system">Solar</a>
+    <a href="/black-holes">Black Holes</a>
+    <a href="/galaxies">Galaxies</a>
+    <a href="/timeline">Timeline</a>
+    <a href="/star-life" class="active">Stars</a>
+    <a href="/exoplanets">Worlds</a>
+  </div>
+</nav>
+
+<section class="chapter-page">
+  <div class="chapter-header">
+    <div class="section-label">Chapter Five</div>
+    <h2 class="section-title">The life of a star.<br/>A story told in <span class="accent">seven acts.</span></h2>
+    <p class="section-desc">Every star you see has a story that spans billions of years — birth, brilliance, expansion, death. Watch one unfold here.</p>
+  </div>
+
+  <div class="canvas-frame" id="canvas-frame">
+    <canvas id="star-canvas"></canvas>
+    <div class="hud-corner hud-tl">◈ Stellar Evolution · Live</div>
+    <div class="hud-corner hud-tr" id="hud-stage">Stage —</div>
+
+    <div class="stage-readout">
+      <div class="age" id="stage-age">—</div>
+      <div class="name" id="stage-name">—</div>
+      <div class="desc" id="stage-desc">—</div>
+    </div>
+
+    <div class="stage-controls" id="stage-controls"></div>
+  </div>
+</section>
+
+<nav class="chapter-nav">
+  <a href="/timeline" class="chapter-nav-link prev">
+    <span class="small">↩ &nbsp; Chapter Four</span>
+    <span class="big">Time Itself</span>
+  </a>
+  <a href="/exoplanets" class="chapter-nav-link next">
+    <span class="small">Chapter Six &nbsp; ↪</span>
+    <span class="big">Other Worlds</span>
+  </a>
+</nav>
+
+<footer class="cv-footer">
+  <div class="credit">Built with curiosity by <span>Yuvaan Technologies</span></div>
+  <div>CosmosVerse &nbsp;·&nbsp; v 1.0</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+var STAGES = [
+  {
+    name: 'Stellar Nebula', age: '— before time',
+    desc: 'A vast cloud of hydrogen and dust, light-years across, drifting in interstellar space. Gravity is slowly, patiently pulling it inward.',
+    starR: 0.001, starCol: 0x000000, starOp: 0,
+    glow1R: 0, glow2R: 0,
+    cloudMode: 'nebula', cloudCol1: 0xC44896, cloudCol2: 0x6E48BC,
+    extras: 'none'
+  },
+  {
+    name: 'Protostar', age: '~100,000 years old',
+    desc: 'The cloud has collapsed enough that its centre glows from gravitational heating. Not yet a true star — fusion has not begun. The infant ember is forming.',
+    starR: 1.4, starCol: 0xFFB060, starOp: 1,
+    glow1R: 3.2, glow1Col: 0xFF8030,
+    glow2R: 5, glow2Col: 0xC04020,
+    cloudMode: 'collapsing', cloudCol1: 0xC44896, cloudCol2: 0x804080,
+    extras: 'none'
+  },
+  {
+    name: 'Main Sequence Star', age: '~4.6 billion years old',
+    desc: 'Fusion has ignited. Hydrogen burns to helium in the core. This is most of a star\'s life — stable, brilliant, the kind of star we orbit. Our Sun is here.',
+    starR: 2.6, starCol: 0xFFEE55, starOp: 1,
+    glow1R: 3.5, glow1Col: 0xFFB030,
+    glow2R: 5.5, glow2Col: 0xFF6600,
+    cloudMode: 'none',
+    extras: 'corona'
+  },
+  {
+    name: 'Red Giant', age: '~10 billion years old',
+    desc: 'Hydrogen in the core is exhausted. The star bloats to hundreds of times its original size, its surface cooling to red. It will consume any inner planets it once warmed.',
+    starR: 7, starCol: 0xFF5530, starOp: 1,
+    glow1R: 9, glow1Col: 0xFF3010,
+    glow2R: 13, glow2Col: 0xA02000,
+    cloudMode: 'sparse', cloudCol1: 0xFF6040, cloudCol2: 0x802010,
+    extras: 'corona'
+  },
+  {
+    name: 'Planetary Nebula', age: '~10.05 billion years old',
+    desc: 'A sun-like star\'s gentle end. The outer layers are gently puffed off into space as a glowing shell of gas. The remaining core — a white-hot ember — is exposed.',
+    starR: 0.8, starCol: 0xCCEEFF, starOp: 1,
+    glow1R: 1.6, glow1Col: 0xAACCFF,
+    glow2R: 2.4, glow2Col: 0x6080FF,
+    cloudMode: 'expanding', cloudCol1: 0x66CCFF, cloudCol2: 0xFF6080,
+    extras: 'shell'
+  },
+  {
+    name: 'Supernova', age: '— massive star path',
+    desc: 'For stars more than 8× the Sun\'s mass: a violent end. The core collapses; the outer layers detonate in a flash brighter than an entire galaxy. New elements are forged and scattered.',
+    starR: 0.5, starCol: 0xFFFFFF, starOp: 1,
+    glow1R: 8, glow1Col: 0xFFEEAA,
+    glow2R: 20, glow2Col: 0xFFAA40,
+    cloudMode: 'explosion', cloudCol1: 0xFFEE88, cloudCol2: 0xFF6020,
+    extras: 'flash'
+  },
+  {
+    name: 'Neutron Star · Black Hole', age: '— eternal remnant',
+    desc: 'What\'s left after a supernova. If the remnant is below ~3 solar masses, it becomes a neutron star — a city-sized ball of pure nuclear matter, spinning rapidly. Above that, a black hole.',
+    starR: 0.5, starCol: 0xAACCFF, starOp: 1,
+    glow1R: 1.0, glow1Col: 0x88AAFF,
+    glow2R: 1.6, glow2Col: 0x4060FF,
+    cloudMode: 'remnant', cloudCol1: 0x6080FF, cloudCol2: 0x4040A0,
+    extras: 'pulsar'
+  }
+];
+
+var frame = document.getElementById('canvas-frame');
+var canvas = document.getElementById('star-canvas');
+var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x010204, 1);
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(55, 1, 0.1, 2000);
+function resize() {
+  var w = frame.clientWidth, h = frame.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+resize(); window.addEventListener('resize', resize);
+
+var sph = { t: 0.8, p: 1.1, r: 30 };
+function camUp() {
+  camera.position.set(sph.r*Math.sin(sph.p)*Math.cos(sph.t), sph.r*Math.cos(sph.p), sph.r*Math.sin(sph.p)*Math.sin(sph.t));
+  camera.lookAt(0, 0, 0);
+}
+camUp();
+
+// Background stars
+var bgPos = new Float32Array(3000 * 3);
+for (var i = 0; i < 3000; i++) {
+  var th = Math.random()*Math.PI*2, ph = Math.acos(2*Math.random()-1), rr = 250 + Math.random()*180;
+  bgPos[i*3]=rr*Math.sin(ph)*Math.cos(th); bgPos[i*3+1]=rr*Math.sin(ph)*Math.sin(th); bgPos[i*3+2]=rr*Math.cos(ph);
+}
+var bgGeo = new THREE.BufferGeometry();
+bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
+scene.add(new THREE.Points(bgGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.6, sizeAttenuation: true, transparent: true, opacity: 0.55 })));
+
+// Core star
+var starMat = new THREE.MeshBasicMaterial({ color: 0xFFEE55, transparent: true });
+var star = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 48), starMat);
+scene.add(star);
+
+// Two glow layers
+var glow1Mat = new THREE.MeshBasicMaterial({ color: 0xFFB030, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending, side: THREE.BackSide, depthWrite: false });
+var glow1 = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), glow1Mat);
+scene.add(glow1);
+
+var glow2Mat = new THREE.MeshBasicMaterial({ color: 0xFF6600, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending, side: THREE.BackSide, depthWrite: false });
+var glow2 = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), glow2Mat);
+scene.add(glow2);
+
+// Particle cloud (used for all gas/dust states)
+var CLOUD_PARTICLES = 4000;
+var cloudPositions = new Float32Array(CLOUD_PARTICLES * 3);
+var cloudColors = new Float32Array(CLOUD_PARTICLES * 3);
+var cloudVelocities = new Float32Array(CLOUD_PARTICLES * 3);
+var cloudBaseRadii = new Float32Array(CLOUD_PARTICLES);
+var cloudGeo = new THREE.BufferGeometry();
+cloudGeo.setAttribute('position', new THREE.BufferAttribute(cloudPositions, 3));
+cloudGeo.setAttribute('color', new THREE.BufferAttribute(cloudColors, 3));
+var cloudMat = new THREE.PointsMaterial({
+  size: 0.5, sizeAttenuation: true,
+  vertexColors: true, transparent: true, opacity: 0.7,
+  blending: THREE.AdditiveBlending, depthWrite: false
+});
+var cloud = new THREE.Points(cloudGeo, cloudMat);
+scene.add(cloud);
+
+// Pulsar beams (for neutron star stage)
+var pulsarGroup = new THREE.Group();
+function makePulsarBeam(dir) {
+  var beamMat = new THREE.MeshBasicMaterial({ color: 0xCCDDFF, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, depthWrite: false });
+  var beam = new THREE.Mesh(new THREE.ConeGeometry(0.3, 14, 16, 8, true), beamMat);
+  beam.position.y = dir * 7;
+  if (dir < 0) beam.rotation.x = Math.PI;
+  return beam;
+}
+pulsarGroup.add(makePulsarBeam(1));
+pulsarGroup.add(makePulsarBeam(-1));
+pulsarGroup.visible = false;
+pulsarGroup.rotation.z = 0.4;
+scene.add(pulsarGroup);
+
+// Expanding shell (for planetary nebula)
+var shellMat = new THREE.MeshBasicMaterial({ color: 0x6080FF, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, side: THREE.BackSide, depthWrite: false });
+var shell = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), shellMat);
+scene.add(shell);
+
+function rebuildCloud(stage) {
+  var c1 = new THREE.Color(stage.cloudCol1 || 0x444444);
+  var c2 = new THREE.Color(stage.cloudCol2 || 0x222244);
+
+  for (var i = 0; i < CLOUD_PARTICLES; i++) {
+    var p = i*3;
+    if (stage.cloudMode === 'nebula') {
+      // Diffuse cloud, irregular
+      var theta = Math.random()*Math.PI*2, phi = Math.acos(2*Math.random()-1);
+      var r = 4 + Math.random()*18 + Math.cos(theta*3)*3 + Math.sin(phi*4)*2;
+      cloudPositions[p] = Math.sin(phi)*Math.cos(theta)*r;
+      cloudPositions[p+1] = Math.sin(phi)*Math.sin(theta)*r;
+      cloudPositions[p+2] = Math.cos(phi)*r;
+      cloudVelocities[p] = (Math.random()-0.5)*0.1;
+      cloudVelocities[p+1] = (Math.random()-0.5)*0.1;
+      cloudVelocities[p+2] = (Math.random()-0.5)*0.1;
+    } else if (stage.cloudMode === 'collapsing') {
+      var theta = Math.random()*Math.PI*2, phi = Math.acos(2*Math.random()-1);
+      var r = 3 + Math.random()*10;
+      cloudPositions[p] = Math.sin(phi)*Math.cos(theta)*r;
+      cloudPositions[p+1] = Math.sin(phi)*Math.sin(theta)*r;
+      cloudPositions[p+2] = Math.cos(phi)*r;
+      // Velocity inward
+      var len = Math.sqrt(cloudPositions[p]**2 + cloudPositions[p+1]**2 + cloudPositions[p+2]**2);
+      cloudVelocities[p] = -cloudPositions[p]/len * 0.4;
+      cloudVelocities[p+1] = -cloudPositions[p+1]/len * 0.4;
+      cloudVelocities[p+2] = -cloudPositions[p+2]/len * 0.4;
+    } else if (stage.cloudMode === 'sparse') {
+      var theta = Math.random()*Math.PI*2, phi = Math.acos(2*Math.random()-1);
+      var r = 9 + Math.random()*8;
+      cloudPositions[p] = Math.sin(phi)*Math.cos(theta)*r;
+      cloudPositions[p+1] = Math.sin(phi)*Math.sin(theta)*r;
+      cloudPositions[p+2] = Math.cos(phi)*r;
+      cloudVelocities[p] = (Math.random()-0.5)*0.03;
+      cloudVelocities[p+1] = (Math.random()-0.5)*0.03;
+      cloudVelocities[p+2] = (Math.random()-0.5)*0.03;
+    } else if (stage.cloudMode === 'expanding') {
+      // Spherical shell expanding
+      var theta = Math.random()*Math.PI*2, phi = Math.acos(2*Math.random()-1);
+      var r = 3 + Math.random()*2;
+      var sx = Math.sin(phi)*Math.cos(theta), sy = Math.sin(phi)*Math.sin(theta), sz = Math.cos(phi);
+      cloudPositions[p] = sx*r; cloudPositions[p+1] = sy*r; cloudPositions[p+2] = sz*r;
+      cloudVelocities[p] = sx*0.5; cloudVelocities[p+1] = sy*0.5; cloudVelocities[p+2] = sz*0.5;
+      cloudBaseRadii[i] = r;
+    } else if (stage.cloudMode === 'explosion') {
+      // Fast radial expansion
+      var theta = Math.random()*Math.PI*2, phi = Math.acos(2*Math.random()-1);
+      var r = 1 + Math.random()*3;
+      var sx = Math.sin(phi)*Math.cos(theta), sy = Math.sin(phi)*Math.sin(theta), sz = Math.cos(phi);
+      cloudPositions[p] = sx*r; cloudPositions[p+1] = sy*r; cloudPositions[p+2] = sz*r;
+      var speed = 1.2 + Math.random()*1.0;
+      cloudVelocities[p] = sx*speed; cloudVelocities[p+1] = sy*speed; cloudVelocities[p+2] = sz*speed;
+    } else if (stage.cloudMode === 'remnant') {
+      var theta = Math.random()*Math.PI*2, phi = Math.acos(2*Math.random()-1);
+      var r = 8 + Math.random()*14;
+      cloudPositions[p] = Math.sin(phi)*Math.cos(theta)*r;
+      cloudPositions[p+1] = Math.sin(phi)*Math.sin(theta)*r;
+      cloudPositions[p+2] = Math.cos(phi)*r;
+      cloudVelocities[p] = (Math.random()-0.5)*0.15;
+      cloudVelocities[p+1] = (Math.random()-0.5)*0.15;
+      cloudVelocities[p+2] = (Math.random()-0.5)*0.15;
+    } else {
+      // none - hide particles far away
+      cloudPositions[p] = 9999; cloudPositions[p+1] = 9999; cloudPositions[p+2] = 9999;
+      cloudVelocities[p] = 0; cloudVelocities[p+1] = 0; cloudVelocities[p+2] = 0;
+    }
+    var c = c1.clone().lerp(c2, Math.random());
+    var brightness = 0.7 + Math.random()*0.5;
+    cloudColors[p] = c.r * brightness;
+    cloudColors[p+1] = c.g * brightness;
+    cloudColors[p+2] = c.b * brightness;
+  }
+  cloudGeo.attributes.position.needsUpdate = true;
+  cloudGeo.attributes.color.needsUpdate = true;
+}
+
+var currentStage = 0;
+var currentStageData = STAGES[0];
+var stageStartTime = 0;
+function applyStage(idx) {
+  currentStage = idx;
+  var s = STAGES[idx];
+  currentStageData = s;
+  stageStartTime = performance.now();
+
+  document.getElementById('stage-name').textContent = s.name;
+  document.getElementById('stage-age').textContent = s.age;
+  document.getElementById('stage-desc').textContent = s.desc;
+  document.getElementById('hud-stage').textContent = 'Stage ' + (idx+1) + ' of ' + STAGES.length;
+
+  // Star
+  star.scale.setScalar(s.starR);
+  starMat.color.setHex(s.starCol);
+  starMat.opacity = s.starOp;
+
+  // Glows
+  glow1.scale.setScalar(s.glow1R || 0);
+  glow1Mat.color.setHex(s.glow1Col || 0);
+  glow1Mat.opacity = (s.glow1R > 0) ? 0.3 : 0;
+
+  glow2.scale.setScalar(s.glow2R || 0);
+  glow2Mat.color.setHex(s.glow2Col || 0);
+  glow2Mat.opacity = (s.glow2R > 0) ? 0.15 : 0;
+
+  // Extras
+  pulsarGroup.visible = (s.extras === 'pulsar');
+  shellMat.opacity = (s.extras === 'shell') ? 0.18 : 0;
+  if (s.extras === 'shell') {
+    shell.scale.setScalar(3);
+    shellMat.color.setHex(s.cloudCol2 || 0x6080FF);
+  }
+
+  rebuildCloud(s);
+  // Update active button
+  document.querySelectorAll('.stage-btn').forEach(function(b, i) { b.classList.toggle('active', i === idx); });
+}
+
+// Build stage controls
+var sc = document.getElementById('stage-controls');
+STAGES.forEach(function(s, i) {
+  var b = document.createElement('button');
+  b.className = 'stage-btn';
+  // Short labels
+  var short = ['Nebula', 'Protostar', 'Main Seq.', 'Red Giant', 'Planetary', 'Supernova', 'Remnant'][i];
+  b.textContent = (i+1) + ' · ' + short;
+  b.addEventListener('click', function() { stopAutoplay(); applyStage(i); });
+  sc.appendChild(b);
+});
+var playBtn = document.createElement('button');
+playBtn.className = 'play-btn';
+playBtn.textContent = '▶ Auto';
+sc.appendChild(playBtn);
+
+var autoplay = false, autoplayTimer = null;
+function startAutoplay() {
+  autoplay = true;
+  playBtn.textContent = '◼ Stop';
+  autoplayTimer = setInterval(function() {
+    var next = (currentStage + 1) % STAGES.length;
+    applyStage(next);
+  }, 5000);
+}
+function stopAutoplay() {
+  autoplay = false;
+  playBtn.textContent = '▶ Auto';
+  if (autoplayTimer) { clearInterval(autoplayTimer); autoplayTimer = null; }
+}
+playBtn.addEventListener('click', function() {
+  if (autoplay) stopAutoplay(); else startAutoplay();
+});
+
+// Interaction
+var drag = false, lm = { x: 0, y: 0 };
+canvas.addEventListener('mousedown', function(e) { drag = true; lm = { x: e.clientX, y: e.clientY }; });
+window.addEventListener('mouseup', function() { drag = false; });
+window.addEventListener('mousemove', function(e) {
+  if (!drag) return;
+  sph.t -= (e.clientX-lm.x)*0.008;
+  sph.p = Math.max(0.15, Math.min(Math.PI*0.95, sph.p + (e.clientY-lm.y)*0.008));
+  lm = { x: e.clientX, y: e.clientY };
+});
+canvas.addEventListener('wheel', function(e) {
+  e.preventDefault();
+  sph.r = Math.max(8, Math.min(80, sph.r + e.deltaY*0.06));
+}, { passive: false });
+canvas.addEventListener('touchstart', function(e) {
+  drag = true; lm = { x: e.touches[0].clientX, y: e.touches[0].clientY }; e.preventDefault();
+}, { passive: false });
+window.addEventListener('touchend', function() { drag = false; });
+window.addEventListener('touchmove', function(e) {
+  if (!drag) return;
+  sph.t -= (e.touches[0].clientX-lm.x)*0.01;
+  sph.p = Math.max(0.15, Math.min(Math.PI*0.95, sph.p + (e.touches[0].clientY-lm.y)*0.01));
+  lm = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+});
+
+// Animate
+var lastT = performance.now(), time = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  var now = performance.now(), dt = Math.min((now-lastT)/1000, 0.05);
+  lastT = now; time += dt;
+  var sinceStage = (now - stageStartTime) / 1000;
+
+  // Update cloud particles based on velocity
+  var positions = cloudGeo.attributes.position.array;
+  var mode = currentStageData.cloudMode;
+  for (var i = 0; i < CLOUD_PARTICLES; i++) {
+    var p = i*3;
+    if (mode === 'explosion') {
+      // Decelerate over time, fade
+      var decel = 0.97;
+      cloudVelocities[p] *= decel;
+      cloudVelocities[p+1] *= decel;
+      cloudVelocities[p+2] *= decel;
+      positions[p] += cloudVelocities[p];
+      positions[p+1] += cloudVelocities[p+1];
+      positions[p+2] += cloudVelocities[p+2];
+    } else if (mode === 'expanding') {
+      positions[p] += cloudVelocities[p] * dt * 0.6;
+      positions[p+1] += cloudVelocities[p+1] * dt * 0.6;
+      positions[p+2] += cloudVelocities[p+2] * dt * 0.6;
+      // Reset when too far
+      var dist = Math.sqrt(positions[p]**2 + positions[p+1]**2 + positions[p+2]**2);
+      if (dist > 25) {
+        var theta = Math.random()*Math.PI*2, phi = Math.acos(2*Math.random()-1);
+        var r = 3 + Math.random()*1.5;
+        var sx = Math.sin(phi)*Math.cos(theta), sy = Math.sin(phi)*Math.sin(theta), sz = Math.cos(phi);
+        positions[p] = sx*r; positions[p+1] = sy*r; positions[p+2] = sz*r;
+        cloudVelocities[p] = sx*0.5; cloudVelocities[p+1] = sy*0.5; cloudVelocities[p+2] = sz*0.5;
+      }
+    } else if (mode === 'collapsing') {
+      positions[p] += cloudVelocities[p] * dt;
+      positions[p+1] += cloudVelocities[p+1] * dt;
+      positions[p+2] += cloudVelocities[p+2] * dt;
+      // Reset when too close
+      var dist = Math.sqrt(positions[p]**2 + positions[p+1]**2 + positions[p+2]**2);
+      if (dist < 1.8) {
+        var theta = Math.random()*Math.PI*2, phi = Math.acos(2*Math.random()-1);
+        var r = 6 + Math.random()*6;
+        positions[p] = Math.sin(phi)*Math.cos(theta)*r;
+        positions[p+1] = Math.sin(phi)*Math.sin(theta)*r;
+        positions[p+2] = Math.cos(phi)*r;
+        var len = r;
+        cloudVelocities[p] = -positions[p]/len * 0.4;
+        cloudVelocities[p+1] = -positions[p+1]/len * 0.4;
+        cloudVelocities[p+2] = -positions[p+2]/len * 0.4;
+      }
+    } else if (mode !== 'none') {
+      positions[p] += cloudVelocities[p] * dt;
+      positions[p+1] += cloudVelocities[p+1] * dt;
+      positions[p+2] += cloudVelocities[p+2] * dt;
+    }
+  }
+  cloudGeo.attributes.position.needsUpdate = true;
+
+  // Stage-specific animations
+  if (currentStageData.extras === 'flash') {
+    // Supernova fades
+    var fadeOut = Math.max(0, 1 - sinceStage / 3);
+    glow1Mat.opacity = 0.6 * fadeOut + 0.1;
+    glow2Mat.opacity = 0.35 * fadeOut + 0.05;
+    star.scale.setScalar(0.5 + (1 - fadeOut) * 0.3);
+  } else if (currentStageData.extras === 'corona') {
+    glow1Mat.opacity = 0.28 + Math.sin(time*1.2)*0.05;
+    glow2Mat.opacity = 0.13 + Math.sin(time*0.9)*0.03;
+    star.rotation.y += 0.3 * dt;
+  } else if (currentStageData.extras === 'pulsar') {
+    pulsarGroup.rotation.y = time * 3.5;
+    var pulse = Math.abs(Math.sin(time*5));
+    pulsarGroup.children.forEach(function(c) { c.material.opacity = 0.3 + pulse*0.4; });
+  } else if (currentStageData.extras === 'shell') {
+    var growth = Math.min(8, 3 + sinceStage * 0.4);
+    shell.scale.setScalar(growth);
+    shellMat.opacity = Math.max(0.05, 0.25 - sinceStage * 0.015);
+  }
+
+  // Slow camera drift if no input
+  if (!drag && !autoplay) {
+    sph.t += 0.02 * dt;
+  }
+  if (autoplay) sph.t += 0.04 * dt;
+
+  camUp();
+  renderer.render(scene, camera);
+}
+
+applyStage(0);
+animate();
+</script>
+</body>
+</html>

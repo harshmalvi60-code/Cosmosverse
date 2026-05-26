@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#020308" />
+  <title>Black Holes — CosmosVerse</title>
+  <meta name="description" content="Peer past the event horizon. Witness an accretion disk in motion, the photon ring of a supermassive black hole, and relativistic jets cutting through space." />
+  <meta property="og:title" content="Black Holes — CosmosVerse" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%8C%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="chapter-blackhole">
+
+<nav class="cv-nav">
+  <a href="/" class="cv-logo">Cosmos<span>Verse</span></a>
+  <button class="cv-menu-toggle" aria-label="Menu" onclick="document.body.classList.toggle('menu-open')">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="cv-nav-links">
+    <a href="/">Home</a>
+    <a href="/solar-system">Solar</a>
+    <a href="/black-holes" class="active">Black Holes</a>
+    <a href="/galaxies">Galaxies</a>
+    <a href="/timeline">Timeline</a>
+    <a href="/star-life">Stars</a>
+    <a href="/exoplanets">Worlds</a>
+  </div>
+</nav>
+
+<section class="chapter-page">
+  <div class="chapter-header">
+    <div class="section-label">Chapter Two</div>
+    <h2 class="section-title">Into the abyss.<br/>Where light itself <span class="accent">cannot escape.</span></h2>
+    <p class="section-desc">A black hole is not a hole. It is a place where spacetime is so curved by mass that nothing — not even light — can return. What you see is everything just before the fall.</p>
+  </div>
+
+  <div class="canvas-frame" id="canvas-frame">
+    <canvas id="bh-canvas"></canvas>
+    <div class="hud-corner hud-tl">◈ Event Horizon · Live</div>
+    <div class="hud-corner hud-tr" id="hud-mass">— solar masses</div>
+    <div class="item-list" id="bh-list"></div>
+    <div class="info-panel" id="info-panel">
+      <button class="info-close" id="close-btn" aria-label="Close">✕</button>
+      <div class="info-name" id="bh-name"></div>
+      <div class="info-type" id="bh-type"></div>
+      <div id="stats-container"></div>
+      <div class="info-fact" id="bh-fact"></div>
+    </div>
+    <div class="hud-corner hud-bl">Drag · Scroll · Click</div>
+    <div class="hud-corner hud-br">v 1.0</div>
+  </div>
+
+  <div style="max-width:760px;margin:60px auto 20px;padding:0 8px;">
+    <div class="section-label" style="justify-content:flex-start;">Field Notes</div>
+    <h3 style="font-family:var(--serif);font-style:italic;font-weight:400;font-size:28px;color:var(--text);margin-bottom:18px;letter-spacing:-0.01em;">What you're seeing.</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:24px;">
+      <div style="border-left:1px solid var(--border-strong);padding-left:18px;">
+        <div style="font-family:var(--serif);font-style:italic;color:var(--accent);font-size:16px;margin-bottom:6px;">Event Horizon</div>
+        <div style="font-size:11px;color:var(--text-dim);line-height:1.8;">The point of no return. Past it, the escape velocity exceeds the speed of light. We can never see what lies within.</div>
+      </div>
+      <div style="border-left:1px solid var(--border-strong);padding-left:18px;">
+        <div style="font-family:var(--serif);font-style:italic;color:var(--accent);font-size:16px;margin-bottom:6px;">Accretion Disk</div>
+        <div style="font-size:11px;color:var(--text-dim);line-height:1.8;">Gas and dust spiralling inward, heated by friction to millions of degrees, blazing in X-rays before vanishing forever.</div>
+      </div>
+      <div style="border-left:1px solid var(--border-strong);padding-left:18px;">
+        <div style="font-family:var(--serif);font-style:italic;color:var(--accent);font-size:16px;margin-bottom:6px;">Photon Ring</div>
+        <div style="font-size:11px;color:var(--text-dim);line-height:1.8;">The bright ring of light orbiting the event horizon — photons trapped in a circle, the silhouette of pure gravity.</div>
+      </div>
+      <div style="border-left:1px solid var(--border-strong);padding-left:18px;">
+        <div style="font-family:var(--serif);font-style:italic;color:var(--accent);font-size:16px;margin-bottom:6px;">Relativistic Jets</div>
+        <div style="font-size:11px;color:var(--text-dim);line-height:1.8;">Twin beams of plasma launched from the poles at nearly the speed of light, stretching for thousands of light-years.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<nav class="chapter-nav">
+  <a href="/solar-system" class="chapter-nav-link prev">
+    <span class="small">↩ &nbsp; Chapter One</span>
+    <span class="big">The Solar System</span>
+  </a>
+  <a href="/galaxies" class="chapter-nav-link next">
+    <span class="small">Chapter Three &nbsp; ↪</span>
+    <span class="big">Island Universes</span>
+  </a>
+</nav>
+
+<footer class="cv-footer">
+  <div class="credit">Built with curiosity by <span>Yuvaan Technologies</span></div>
+  <div>CosmosVerse &nbsp;·&nbsp; v 1.0</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+var BLACK_HOLES = [
+  { name: 'Sagittarius A*', type: 'Supermassive · Milky Way Centre', mass: 4.3, massStr: '4.3 million ⊙',
+    stats: { 'Mass': '4.3 million ⊙', 'Distance from Earth': '26,000 light-years', 'Schwarzschild radius': '12.7 million km', 'Type': 'Supermassive', 'Discovered': '1974' },
+    fact: 'The supermassive black hole at the heart of our own Milky Way. Imaged for the first time in 2022 by the Event Horizon Telescope — a portrait of the monster at our centre.',
+    diskHue: 0.05, diskBright: 1.0, jetIntensity: 0.5 },
+  { name: 'M87*', type: 'Supermassive · First Imaged', mass: 6500, massStr: '6.5 billion ⊙',
+    stats: { 'Mass': '6.5 billion ⊙', 'Distance from Earth': '53 million light-years', 'Schwarzschild radius': '19 billion km', 'Type': 'Supermassive', 'Imaged': 'April 10, 2019' },
+    fact: 'The first black hole ever directly photographed. The image — an orange donut of light around a dark void — confirmed Einstein\'s general relativity yet again, a century on.',
+    diskHue: 0.08, diskBright: 1.2, jetIntensity: 1.0 },
+  { name: 'TON 618', type: 'Ultramassive · Quasar Heart', mass: 66000, massStr: '66 billion ⊙',
+    stats: { 'Mass': '66 billion ⊙', 'Distance from Earth': '10.4 billion light-years', 'Schwarzschild radius': '195 billion km', 'Type': 'Ultramassive', 'Power output': 'Quasar' },
+    fact: 'One of the largest black holes ever found. Its event horizon spans 40 times the orbit of Neptune. We see it as it was when the universe was just 3 billion years old.',
+    diskHue: 0.0, diskBright: 1.4, jetIntensity: 0.9 },
+  { name: 'Cygnus X-1', type: 'Stellar-Mass · First Confirmed', mass: 0.000021, massStr: '21 ⊙',
+    stats: { 'Mass': '21 solar masses', 'Distance from Earth': '7,200 light-years', 'Schwarzschild radius': '62 km', 'Type': 'Stellar-mass', 'Discovered': '1971' },
+    fact: 'The first object widely accepted as a black hole. Hawking famously bet Kip Thorne it wasn\'t one — and conceded the wager in 1990 when the evidence became overwhelming.',
+    diskHue: 0.55, diskBright: 0.9, jetIntensity: 0.4 },
+  { name: 'V404 Cygni', type: 'Stellar-Mass · Microquasar', mass: 0.000009, massStr: '9 ⊙',
+    stats: { 'Mass': '9 solar masses', 'Distance from Earth': '7,800 light-years', 'Schwarzschild radius': '27 km', 'Type': 'Stellar-mass', 'Behaviour': 'X-ray binary' },
+    fact: 'A stellar-mass black hole devouring a nearby companion star. In 2015 it erupted in a violent outburst visible across the electromagnetic spectrum — the cosmic feast continues.',
+    diskHue: 0.6, diskBright: 1.1, jetIntensity: 0.7 },
+  { name: 'GW150914', type: 'Stellar-Mass · The First Merger', mass: 0.000062, massStr: '62 ⊙ (final)',
+    stats: { 'Initial masses': '36 + 29 solar', 'Final mass': '62 solar masses', 'Distance': '1.3 billion light-years', 'Detected': 'Sept 14, 2015', 'Energy released': '3 ⊙ as gravity' },
+    fact: 'The first gravitational wave ever detected. Two black holes spiralled together a billion years ago, and on a quiet morning in 2015, the ripple finally reached LIGO\'s detectors.',
+    diskHue: 0.7, diskBright: 0.5, jetIntensity: 0.3 }
+];
+
+var frame = document.getElementById('canvas-frame');
+var canvas = document.getElementById('bh-canvas');
+var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x000003, 1);
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 2000);
+function resize() {
+  var w = frame.clientWidth, h = frame.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+resize(); window.addEventListener('resize', resize);
+
+var sph = { t: 0.4, p: 1.15, r: 38 };
+function camUp() {
+  camera.position.set(sph.r*Math.sin(sph.p)*Math.cos(sph.t), sph.r*Math.cos(sph.p), sph.r*Math.sin(sph.p)*Math.sin(sph.t));
+  camera.lookAt(0, 0, 0);
+}
+camUp();
+
+// Deep starfield
+var starPos = new Float32Array(8000 * 3);
+for (var i = 0; i < 8000; i++) {
+  var th = Math.random()*Math.PI*2, ph = Math.acos(2*Math.random()-1), rr = 280 + Math.random()*200;
+  starPos[i*3]=rr*Math.sin(ph)*Math.cos(th); starPos[i*3+1]=rr*Math.sin(ph)*Math.sin(th); starPos[i*3+2]=rr*Math.cos(ph);
+}
+var starGeo = new THREE.BufferGeometry();
+starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.7, sizeAttenuation: true, transparent: true, opacity: 0.7 })));
+
+// Event horizon (pure black sphere)
+var EH_RADIUS = 3.5;
+var horizon = new THREE.Mesh(
+  new THREE.SphereGeometry(EH_RADIUS, 48, 48),
+  new THREE.MeshBasicMaterial({ color: 0x000000 })
+);
+scene.add(horizon);
+
+// Photon ring (bright thin ring)
+var photonRing = new THREE.Mesh(
+  new THREE.RingGeometry(EH_RADIUS*1.5, EH_RADIUS*1.62, 96),
+  new THREE.MeshBasicMaterial({ color: 0xFFE9B5, side: THREE.DoubleSide, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false })
+);
+photonRing.rotation.x = Math.PI / 2;
+scene.add(photonRing);
+
+// Photon ring glow
+var photonGlow = new THREE.Mesh(
+  new THREE.RingGeometry(EH_RADIUS*1.42, EH_RADIUS*1.8, 96),
+  new THREE.MeshBasicMaterial({ color: 0xFFB060, side: THREE.DoubleSide, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false })
+);
+photonGlow.rotation.x = Math.PI / 2;
+scene.add(photonGlow);
+
+// Accretion disk (particles)
+var DISK_INNER = EH_RADIUS * 1.85;
+var DISK_OUTER = EH_RADIUS * 6.5;
+var DISK_PARTICLES = 6000;
+var diskPositions = new Float32Array(DISK_PARTICLES * 3);
+var diskColors = new Float32Array(DISK_PARTICLES * 3);
+var diskRadii = new Float32Array(DISK_PARTICLES);
+var diskAngles = new Float32Array(DISK_PARTICLES);
+var diskOpacities = new Float32Array(DISK_PARTICLES);
+function buildDisk(hue, brightness) {
+  for (var i = 0; i < DISK_PARTICLES; i++) {
+    var r = DISK_INNER + (DISK_OUTER - DISK_INNER) * Math.pow(Math.random(), 1.4);
+    var theta = Math.random() * Math.PI * 2;
+    var yJitter = (Math.random() - 0.5) * (0.05 + r * 0.025);
+    diskRadii[i] = r;
+    diskAngles[i] = theta;
+    diskOpacities[i] = 0.4 + Math.random() * 0.6;
+    diskPositions[i*3] = Math.cos(theta) * r;
+    diskPositions[i*3+1] = yJitter;
+    diskPositions[i*3+2] = Math.sin(theta) * r;
+    // Color: inner = hot (white/blue), outer = cool (red/orange)
+    var t = (r - DISK_INNER) / (DISK_OUTER - DISK_INNER);
+    var c = new THREE.Color();
+    // Hue shifts from base hue (warm) to cooler tones as we move outward
+    // Or: inner white-hot, outer settles into base color
+    c.setHSL(hue + t*0.02, 0.85, Math.max(0.45, (0.95 - t*0.7)) * brightness);
+    diskColors[i*3] = c.r;
+    diskColors[i*3+1] = c.g;
+    diskColors[i*3+2] = c.b;
+  }
+  diskGeo.attributes.position.needsUpdate = true;
+  diskGeo.attributes.color.needsUpdate = true;
+}
+var diskGeo = new THREE.BufferGeometry();
+diskGeo.setAttribute('position', new THREE.BufferAttribute(diskPositions, 3));
+diskGeo.setAttribute('color', new THREE.BufferAttribute(diskColors, 3));
+var diskMat = new THREE.PointsMaterial({
+  size: 0.18,
+  sizeAttenuation: true,
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.92,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false
+});
+var diskPoints = new THREE.Points(diskGeo, diskMat);
+scene.add(diskPoints);
+
+// Inner disk hot rim (extra glow at inner edge)
+var hotRim = new THREE.Mesh(
+  new THREE.RingGeometry(DISK_INNER, DISK_INNER * 1.18, 96),
+  new THREE.MeshBasicMaterial({ color: 0xFFFFFF, side: THREE.DoubleSide, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false })
+);
+hotRim.rotation.x = Math.PI / 2;
+scene.add(hotRim);
+
+// Relativistic jets (two cones)
+var jetGroup = new THREE.Group();
+function makeJet(direction) {
+  var jetGeo = new THREE.CylinderGeometry(0.4, 1.8, 18, 24, 8, true);
+  var jetMat = new THREE.MeshBasicMaterial({
+    color: 0x60A8FF, transparent: true, opacity: 0.35,
+    blending: THREE.AdditiveBlending, side: THREE.DoubleSide, depthWrite: false
+  });
+  var jet = new THREE.Mesh(jetGeo, jetMat);
+  jet.position.y = direction * 9 + direction * 0.5;
+  if (direction < 0) jet.rotation.z = Math.PI;
+  // Inner core
+  var coreGeo = new THREE.CylinderGeometry(0.15, 0.8, 18, 16, 8, true);
+  var coreMat = new THREE.MeshBasicMaterial({
+    color: 0xCCE4FF, transparent: true, opacity: 0.55,
+    blending: THREE.AdditiveBlending, side: THREE.DoubleSide, depthWrite: false
+  });
+  var core = new THREE.Mesh(coreGeo, coreMat);
+  jet.add(core);
+  return jet;
+}
+var jetUp = makeJet(1);
+var jetDown = makeJet(-1);
+jetGroup.add(jetUp);
+jetGroup.add(jetDown);
+scene.add(jetGroup);
+
+// Outer disk haze
+var hazeGeo = new THREE.RingGeometry(DISK_OUTER * 0.7, DISK_OUTER * 1.3, 96);
+var hazeMat = new THREE.MeshBasicMaterial({ color: 0x804020, side: THREE.DoubleSide, transparent: true, opacity: 0.06, blending: THREE.AdditiveBlending, depthWrite: false });
+var haze = new THREE.Mesh(hazeGeo, hazeMat);
+haze.rotation.x = Math.PI / 2;
+scene.add(haze);
+
+// Build the list
+var bhList = document.getElementById('bh-list');
+BLACK_HOLES.forEach(function(b, i) {
+  var btn = document.createElement('button');
+  btn.className = 'item-btn'; btn.textContent = b.name;
+  btn.addEventListener('click', function() { selectBH(i); });
+  bhList.appendChild(btn);
+});
+
+document.getElementById('close-btn').addEventListener('click', closePanel);
+function closePanel() {
+  document.getElementById('info-panel').classList.remove('open');
+  document.querySelectorAll('.item-btn').forEach(function(b) { b.classList.remove('active'); });
+}
+
+var currentJetIntensity = 1.0;
+function selectBH(i) {
+  var b = BLACK_HOLES[i];
+  document.getElementById('bh-name').textContent = b.name;
+  document.getElementById('bh-type').textContent = b.type;
+  document.getElementById('hud-mass').textContent = b.massStr;
+  document.getElementById('stats-container').innerHTML = Object.entries(b.stats).map(function(e) {
+    return '<div class="stat-row"><span class="stat-label">' + e[0] + '</span><span class="stat-value">' + e[1] + '</span></div>';
+  }).join('');
+  document.getElementById('bh-fact').textContent = b.fact;
+  document.getElementById('info-panel').classList.add('open');
+  document.querySelectorAll('.item-btn').forEach(function(btn, j) { btn.classList.toggle('active', j === i); });
+  // Visual changes
+  buildDisk(b.diskHue, b.diskBright);
+  currentJetIntensity = b.jetIntensity;
+  jetUp.material.opacity = 0.35 * b.jetIntensity;
+  jetDown.material.opacity = 0.35 * b.jetIntensity;
+}
+
+// Initialize disk and select first BH
+buildDisk(0.06, 1.0);
+selectBH(1);  // Start showing M87*
+
+// Interaction
+var drag = false, didDrag = false, lm = { x: 0, y: 0 };
+canvas.addEventListener('mousedown', function(e) { drag = true; didDrag = false; lm = { x: e.clientX, y: e.clientY }; });
+window.addEventListener('mouseup', function() { drag = false; });
+window.addEventListener('mousemove', function(e) {
+  if (!drag) return;
+  var dx = e.clientX-lm.x, dy = e.clientY-lm.y;
+  if (Math.abs(dx)+Math.abs(dy) > 2) didDrag = true;
+  sph.t -= dx*0.008; sph.p = Math.max(0.15, Math.min(Math.PI*0.9, sph.p + dy*0.008));
+  lm = { x: e.clientX, y: e.clientY };
+});
+canvas.addEventListener('wheel', function(e) {
+  e.preventDefault();
+  sph.r = Math.max(15, Math.min(120, sph.r + e.deltaY*0.06));
+}, { passive: false });
+canvas.addEventListener('touchstart', function(e) {
+  drag = true; didDrag = false; lm = { x: e.touches[0].clientX, y: e.touches[0].clientY }; e.preventDefault();
+}, { passive: false });
+window.addEventListener('touchend', function() { drag = false; });
+window.addEventListener('touchmove', function(e) {
+  if (!drag) return; didDrag = true;
+  var dx = e.touches[0].clientX-lm.x, dy = e.touches[0].clientY-lm.y;
+  sph.t -= dx*0.01; sph.p = Math.max(0.15, Math.min(Math.PI*0.9, sph.p + dy*0.01));
+  lm = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+});
+
+// Animate
+var lastT = performance.now(), time = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  var now = performance.now(), dt = Math.min((now-lastT)/1000, 0.05);
+  lastT = now; time += dt;
+
+  // Update disk particles (Keplerian orbital motion - inner faster)
+  var positions = diskGeo.attributes.position.array;
+  for (var i = 0; i < DISK_PARTICLES; i++) {
+    var r = diskRadii[i];
+    // Angular velocity inversely proportional to sqrt(r)
+    var omega = 1.4 / Math.sqrt(r / DISK_INNER);
+    diskAngles[i] += omega * dt;
+    positions[i*3] = Math.cos(diskAngles[i]) * r;
+    positions[i*3+2] = Math.sin(diskAngles[i]) * r;
+  }
+  diskGeo.attributes.position.needsUpdate = true;
+
+  // Photon ring pulses subtly
+  photonRing.material.opacity = 0.78 + Math.sin(time*1.5)*0.12;
+
+  // Jet flicker
+  var flicker = 0.85 + Math.sin(time*3.1)*0.08 + Math.sin(time*7.3)*0.05;
+  jetUp.material.opacity = 0.35 * currentJetIntensity * flicker;
+  jetDown.material.opacity = 0.35 * currentJetIntensity * flicker;
+
+  // Slow rotation of haze
+  haze.rotation.z += 0.03 * dt;
+
+  camUp();
+  renderer.render(scene, camera);
+}
+animate();
+</script>
+</body>
+</html>
